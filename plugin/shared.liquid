@@ -8,6 +8,16 @@
   .ilv-grow { flex: 1 1 auto; }
   .ilv-min0 { min-width: 0; }
 
+  /* Répartition verticale : le contenu occupe toute la hauteur au lieu de laisser un trou au centre */
+  .ilv-fill { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+  .ilv-fill > .ilv-group, .ilv-fill > .ilv-dirblock { flex: 1 1 0; justify-content: center; min-height: 0; }
+  .ilv-dirblock { display: flex; flex-direction: column; }
+  .ilv-dirblock + .ilv-dirblock { border-top: 1px dashed #000; }
+  /* Séparateur entre la colonne métro et la colonne bus */
+  .ilv-row > .ilv-col + .ilv-col { border-left: 2px solid #000; padding-left: calc(20px * var(--k)); }
+  /* Pied de la colonne métro : durée du trajet */
+  .ilv-foot { border-top: 1px dashed #000; padding-top: calc(6px * var(--k)); font-size: calc(19px * var(--k)); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
   /* En-têtes : pastille de ligne + nom de station / arrêt */
   .ilv-head { display: flex; align-items: center; gap: calc(10px * var(--k)); }
   .ilv-badge { display: inline-flex; align-items: center; justify-content: center; flex: none; min-width: calc(40px * var(--k)); height: calc(30px * var(--k)); padding: 0 calc(7px * var(--k)); border-radius: calc(7px * var(--k)); background: #000; color: #fff; font-weight: 700; font-size: calc(19px * var(--k)); line-height: 1; white-space: nowrap; }
@@ -28,7 +38,7 @@
   /* Bus / tram : une ligne + direction, puis ses 3 prochains passages */
   .ilv-group { display: flex; flex-direction: column; gap: calc(2px * var(--k)); padding: calc(5px * var(--k)) 0; }
   .ilv-group + .ilv-group { border-top: 1px dashed #000; }
-  .ilv-groups--2col { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(20px * var(--k)); }
+  .ilv-groups--2col { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; column-gap: calc(20px * var(--k)); }
   .ilv-groups--2col .ilv-group + .ilv-group { border-top: none; }
   .ilv-groups--2col .ilv-group:nth-child(n+3) { border-top: 1px dashed #000; }
   .ilv-dir { flex: 1 1 auto; min-width: 0; font-size: calc(19px * var(--k)); line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -68,6 +78,7 @@
   /* Portrait : on empile métro et bus au lieu de les mettre côte à côte */
   .screen--portrait .view--full .ilv-row, .screen--portrait .view--half_horizontal .ilv-row { flex-direction: column; gap: calc(8px * var(--k)); }
   .screen--portrait .ilv-groups--2col { grid-template-columns: 1fr; }
+  .screen--portrait .view--full .ilv-row > .ilv-col + .ilv-col, .screen--portrait .view--half_horizontal .ilv-row > .ilv-col + .ilv-col { border-left: none; padding-left: 0; border-top: 2px solid #000; padding-top: calc(6px * var(--k)); }
   /* Colonnes étroites en portrait (240 px) : heures plus petites */
   .screen--portrait .view--half_vertical .ilv-time, .screen--portrait .view--quadrant .ilv-time { font-size: calc(22px * var(--k)); letter-spacing: -0.5px; }
   .screen--portrait .view--half_vertical .ilv-times, .screen--portrait .view--quadrant .ilv-times { column-gap: calc(6px * var(--k)); }
@@ -81,6 +92,6 @@
 {% assign s = ilevia.surface %}
 {% if m and m.directions.size > 0 %}{% assign has_metro = true %}{% else %}{% assign has_metro = false %}{% endif %}
 {% if s %}{% assign has_surface = true %}{% else %}{% assign has_surface = false %}{% endif %}
-{% assign ilv_big = false %}{% if trmnl.device.width > 1000 or trmnl.device.height > 1000 %}{% assign ilv_big = true %}{% endif %}
+{% comment %} Grand écran en paysage (TRMNL X) : une ligne de bus de plus {% endcomment %}{% assign ilv_big = false %}{% if trmnl.device.width > 1000 and trmnl.device.width > trmnl.device.height %}{% assign ilv_big = true %}{% endif %}
 {% capture ilv_empty %}{% if s.filtered_out %}Aucune direction ne correspond au filtre. Disponibles : {{ s.available_directions | join: " · " }}{% else %}Aucun passage prévu dans l'heure — vérifiez le nom de l'arrêt et les lignes.{% endif %}{% endcapture %}
 {% capture ilv_icon %}data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='11' fill='black'/><path d='M6 17V7h2.2l3.8 5.2L15.8 7H18v10h-2.3v-6.4L12 15.5l-3.7-4.9V17z' fill='white'/></svg>{% endcapture %}

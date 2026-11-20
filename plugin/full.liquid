@@ -8,22 +8,25 @@
       {% if has_metro %}
       <div class="ilv-col{% if has_surface %} ilv-col--wide{% endif %}">
         {% if m.directions.size > 1 %}
-          {% comment %} Plusieurs directions : une ligne compacte par direction {% endcomment %}
+          {% comment %} Plusieurs directions : un bloc par direction, répartis sur la hauteur {% endcomment %}
           <div class="ilv-name">{{ m.station }}</div>
+          <div class="ilv-fill">
           {% for d in m.directions limit: 4 %}
-            <div class="ilv-dotted"></div>
-            <div class="ilv-head">
-              <span class="ilv-badge ilv-badge--metro">{{ d.line }}</span>
-              <div class="ilv-min0 ilv-grow">
-                <div class="ilv-sub ilv-strong">→ {{ d.terminus }}</div>
-                {% if d.ended %}
-                  <div class="ilv-meta">Service terminé{% if d.next_first %} · reprise {{ d.next_first }}{% endif %}</div>
-                {% else %}
-                  <div class="ilv-deps">{% for dep in d.departures limit: 3 %}<span>{{ dep.time }}</span>{% endfor %}</div>
-                {% endif %}
+            <div class="ilv-dirblock">
+              <div class="ilv-head">
+                <span class="ilv-badge ilv-badge--metro">{{ d.line }}</span>
+                <div class="ilv-min0 ilv-grow">
+                  <div class="ilv-sub ilv-strong">→ {{ d.terminus }}</div>
+                  {% if d.ended %}
+                    <div class="ilv-meta">Service terminé{% if d.next_first %} · reprise {{ d.next_first }}{% endif %}</div>
+                  {% else %}
+                    <div class="ilv-deps">{% for dep in d.departures limit: 3 %}<span>{{ dep.time }}</span>{% endfor %}</div>
+                  {% endif %}
+                </div>
               </div>
             </div>
           {% endfor %}
+          </div>
         {% else %}
           {% assign d = m.directions.first %}
           <div class="ilv-head">
@@ -33,19 +36,21 @@
               <div class="ilv-sub">→ {{ d.terminus }}</div>
             </div>
           </div>
-          {% if d.ended %}
-            <div class="ilv-meta"><b>Service terminé</b>{% if d.next_first %}<br>Premier métro à {{ d.next_first }}{% endif %}</div>
-          {% else %}
-            <div class="ilv-times">
-              {% for dep in d.departures limit: 3 %}
-              <div>
-                <div class="ilv-time{% unless has_surface %} ilv-time--xl{% endunless %}">{{ dep.time }}</div>
-                {% if dep.arrival %}<div class="ilv-arr">arr. {{ dep.arrival }}</div>{% elsif dep.partial %}<div class="ilv-arr">→ {{ dep.headsign }}</div>{% endif %}
+          <div class="ilv-fill">
+            {% if d.ended %}
+              <div class="ilv-meta"><b>Service terminé</b>{% if d.next_first %}<br>Premier métro à {{ d.next_first }}{% endif %}</div>
+            {% else %}
+              <div class="ilv-times">
+                {% for dep in d.departures limit: 3 %}
+                <div>
+                  <div class="ilv-time{% unless has_surface %} ilv-time--xl{% endunless %}">{{ dep.time }}</div>
+                  {% if dep.arrival %}<div class="ilv-arr">arr. {{ dep.arrival }}</div>{% elsif dep.partial %}<div class="ilv-arr">→ {{ dep.headsign }}</div>{% endif %}
+                </div>
+                {% endfor %}
               </div>
-              {% endfor %}
-            </div>
-            {% if d.destination and d.destination != d.terminus %}<div class="ilv-sub">Arrivée à {{ d.destination }} en {{ d.travel_minutes }} min</div>{% endif %}
-          {% endif %}
+            {% endif %}
+          </div>
+          {% if d.destination and d.travel_minutes %}<div class="ilv-foot">Trajet jusqu'à <b>{{ d.destination }}</b> : {{ d.travel_minutes }} min</div>{% endif %}
         {% endif %}
       </div>
       {% endif %}
@@ -57,10 +62,10 @@
           <div class="ilv-name">{{ s.stop }}</div>
         </div>
         {% if s.empty %}
-          <div class="ilv-empty">{{ ilv_empty }}</div>
+          <div class="ilv-fill"><div class="ilv-empty">{{ ilv_empty }}</div></div>
         {% else %}
           {% if has_metro %}{% assign gmax = 4 %}{% else %}{% assign gmax = 8 %}{% endif %}{% if ilv_big %}{% assign gmax = gmax | plus: 1 %}{% endif %}
-          <div{% unless has_metro %} class="ilv-groups--2col"{% endunless %}>
+          <div class="ilv-fill{% unless has_metro %} ilv-groups--2col{% endunless %}">
           {% for g in s.groups limit: gmax %}
             <div class="ilv-group">
               <div class="ilv-head">

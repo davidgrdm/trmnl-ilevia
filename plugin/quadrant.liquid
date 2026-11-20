@@ -9,20 +9,23 @@
           <div class="ilv-sub">→ {{ d.terminus }}</div>
         </div>
       </div>
-      {% if d.ended %}
-        <div class="ilv-meta"><b>Service terminé</b>{% if d.next_first %}<br>Reprise à {{ d.next_first }}{% endif %}</div>
-      {% else %}
-        <div class="ilv-times">
-          {% for dep in d.departures limit: 3 %}
-          <div>
-            <div class="ilv-time ilv-time--md">{{ dep.time }}</div>
-            {% if dep.arrival %}<div class="ilv-arr">arr. {{ dep.arrival }}</div>{% endif %}
+      <div class="ilv-fill">
+        {% if d.ended %}
+          <div class="ilv-meta"><b>Service terminé</b>{% if d.next_first %}<br>Reprise à {{ d.next_first }}{% endif %}</div>
+        {% else %}
+          <div class="ilv-times">
+            {% for dep in d.departures limit: 3 %}
+            <div>
+              <div class="ilv-time ilv-time--md">{{ dep.time }}</div>
+              {% if dep.arrival %}<div class="ilv-arr">arr. {{ dep.arrival }}</div>{% endif %}
+            </div>
+            {% endfor %}
           </div>
-          {% endfor %}
-        </div>
-      {% endif %}
+        {% endif %}
+      </div>
     {% elsif has_surface %}
       {% comment %} Bus seul : le nom de l'arrêt passe dans la barre du bas pour gagner une ligne {% endcomment %}
+      <div class="ilv-fill">
       {% for g in s.groups limit: 2 %}
         <div class="ilv-group">
           <div class="ilv-head">
@@ -34,9 +37,9 @@
       {% else %}
         <div class="ilv-empty">{{ ilv_empty }}</div>
       {% endfor %}
+      </div>
     {% endif %}
 
-    <div class="ilv-grow"></div>
     {% if ilevia.alert_count > 0 %}
       {% assign a = ilevia.alerts.first %}
       <div class="ilv-alert {% if a.severe %}ilv-alert--severe{% endif %}">
