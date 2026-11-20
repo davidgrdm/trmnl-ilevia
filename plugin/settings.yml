@@ -1,0 +1,187 @@
+---
+# Ilévia (Lille) pour TRMNL — métro, tram et bus.
+# ⚠️ Remplacez REPLACE_ME par votre compte GitHub (ici et dans transform.js), voir README.
+name: Ilévia — métro, tram, bus
+strategy: polling
+refresh_interval: 15
+polling_url: https://REPLACE_ME.github.io/trmnl-ilevia/metro/index.json
+polling_verb: GET
+polling_headers: ''
+no_screen_padding: 'no'
+dark_mode: 'no'
+custom_fields:
+- keyname: about
+  name: À propos
+  field_type: author_bio
+  category: travel
+  description: "Prochains passages du réseau Ilévia (Métropole Européenne de Lille). Bus et tram : temps réel (open data MEL). Métro : horaires théoriques (Ilévia ne publie pas le métro en temps réel), avec les perturbations en direct."
+- keyname: metro_station
+  name: Station de métro
+  field_type: select
+  default: republique-beaux-arts
+  help_text: Choisissez « Aucune » pour n'afficher que le bus/tram.
+  options:
+    - "Aucune": none
+    - "4 Cantons Stade Pierre Mauroy (M1)": 4-cantons-stade-pierre-mauroy
+    - "Alsace Plaine Images (M2)": alsace-plaine-images
+    - "Bois Blancs (M2)": bois-blancs
+    - "Bourg (M2)": bourg
+    - "Bourgogne (M2)": bourgogne
+    - "C.H. Dron (M2)": c-h-dron
+    - "Canteleu Euratechnologies (M2)": canteleu-euratechnologies
+    - "Carliers (M2)": carliers
+    - "Chu - Centre O. Lambret (M1)": chu-centre-o-lambret
+    - "CHU Eurasanté (M1)": chu-eurasante
+    - "Cité Scientifique Pr. Gabillard (M1)": cite-scientifique-pr-gabillard
+    - "Colbert (M2)": colbert
+    - "Cormontaigne (M2)": cormontaigne
+    - "Croix Centre (M2)": croix-centre
+    - "Epeule Montesquieu (M2)": epeule-montesquieu
+    - "Eurotéléport (M2)": euroteleport
+    - "Fives (M1)": fives
+    - "Fort De Mons (M2)": fort-de-mons
+    - "Gambetta (M1)": gambetta
+    - "Gare De Tourcoing (M2)": gare-de-tourcoing
+    - "Gare Jean Lebas Roubaix (M2)": gare-jean-lebas-roubaix
+    - "Gare Lille Europe (M2)": gare-lille-europe
+    - "Gare Lille Flandres (M1/M2)": gare-lille-flandres
+    - "Jean Jaures (M2)": jean-jaures
+    - "Les Prés Edgard Pisani (M2)": les-pres-edgard-pisani
+    - "Lille Grand Palais (M2)": lille-grand-palais
+    - "Lomme-Lambersart Arthur Notebart (M2)": lomme-lambersart-arthur-notebart
+    - "Madeleine Caulier (M1)": madeleine-caulier
+    - "Mairie D'Hellemmes (M1)": mairie-d-hellemmes
+    - "Mairie De Croix (M2)": mairie-de-croix
+    - "Mairie De Lille (M2)": mairie-de-lille
+    - "Mairie De Mons (M2)": mairie-de-mons
+    - "Maison Des Enfants (M2)": maison-des-enfants
+    - "Marbrerie (M1)": marbrerie
+    - "Mercure (M2)": mercure
+    - "Mitterie (M2)": mitterie
+    - "Mons Sarts (M2)": mons-sarts
+    - "Montebello (M2)": montebello
+    - "Phalempins (M2)": phalempins
+    - "Pont De Bois (M1)": pont-de-bois
+    - "Pont De Neuville (M2)": pont-de-neuville
+    - "Pont Supérieur (M2)": pont-superieur
+    - "Port De Lille (M2)": port-de-lille
+    - "Porte D'Arras (M2)": porte-d-arras
+    - "Porte De Douai Jardin Des Plantes (M2)": porte-de-douai-jardin-des-plantes
+    - "Porte De Valenciennes (M2)": porte-de-valenciennes
+    - "Porte Des Postes (M1/M2)": porte-des-postes
+    - "Rihour (M1)": rihour
+    - "Roubaix Charles De Gaulle (M2)": roubaix-charles-de-gaulle
+    - "Roubaix Grand Place (M2)": roubaix-grand-place
+    - "République Beaux-Arts (M1)": republique-beaux-arts
+    - "Saint Maurice Pellevoisin (M2)": saint-maurice-pellevoisin
+    - "Saint Philibert (M2)": saint-philibert
+    - "Square Flandres (M1)": square-flandres
+    - "Tourcoing Centre (M2)": tourcoing-centre
+    - "Triolo (M1)": triolo
+    - "Villeneuve D'Ascq Hôtel De Ville (M1)": villeneuve-d-ascq-hotel-de-ville
+    - "Wasquehal Hôtel De Ville (M2)": wasquehal-hotel-de-ville
+    - "Wasquehal Pavé De Lille (M2)": wasquehal-pave-de-lille
+    - "Wazemmes (M1)": wazemmes
+- keyname: metro_direction
+  name: Direction du métro
+  field_type: select
+  default: chu-eurasante
+  options:
+    - "Toutes les directions": all
+    - "M1 → CHU Eurasanté": chu-eurasante
+    - "M1 → 4 Cantons Stade P. Mauroy": 4-cantons-stade-p-mauroy
+    - "M2 → Saint-Philibert": saint-philibert
+    - "M2 → C.H. Dron (Tourcoing)": c-h-dron
+- keyname: metro_destination
+  name: Station d'arrivée (facultatif)
+  field_type: select
+  default: chu-eurasante
+  optional: true
+  help_text: Affiche l'heure d'arrivée estimée à cette station (même ligne, dans la direction choisie).
+  options:
+    - "Aucune": none
+    - "4 Cantons Stade Pierre Mauroy (M1)": 4-cantons-stade-pierre-mauroy
+    - "Alsace Plaine Images (M2)": alsace-plaine-images
+    - "Bois Blancs (M2)": bois-blancs
+    - "Bourg (M2)": bourg
+    - "Bourgogne (M2)": bourgogne
+    - "C.H. Dron (M2)": c-h-dron
+    - "Canteleu Euratechnologies (M2)": canteleu-euratechnologies
+    - "Carliers (M2)": carliers
+    - "Chu - Centre O. Lambret (M1)": chu-centre-o-lambret
+    - "CHU Eurasanté (M1)": chu-eurasante
+    - "Cité Scientifique Pr. Gabillard (M1)": cite-scientifique-pr-gabillard
+    - "Colbert (M2)": colbert
+    - "Cormontaigne (M2)": cormontaigne
+    - "Croix Centre (M2)": croix-centre
+    - "Epeule Montesquieu (M2)": epeule-montesquieu
+    - "Eurotéléport (M2)": euroteleport
+    - "Fives (M1)": fives
+    - "Fort De Mons (M2)": fort-de-mons
+    - "Gambetta (M1)": gambetta
+    - "Gare De Tourcoing (M2)": gare-de-tourcoing
+    - "Gare Jean Lebas Roubaix (M2)": gare-jean-lebas-roubaix
+    - "Gare Lille Europe (M2)": gare-lille-europe
+    - "Gare Lille Flandres (M1/M2)": gare-lille-flandres
+    - "Jean Jaures (M2)": jean-jaures
+    - "Les Prés Edgard Pisani (M2)": les-pres-edgard-pisani
+    - "Lille Grand Palais (M2)": lille-grand-palais
+    - "Lomme-Lambersart Arthur Notebart (M2)": lomme-lambersart-arthur-notebart
+    - "Madeleine Caulier (M1)": madeleine-caulier
+    - "Mairie D'Hellemmes (M1)": mairie-d-hellemmes
+    - "Mairie De Croix (M2)": mairie-de-croix
+    - "Mairie De Lille (M2)": mairie-de-lille
+    - "Mairie De Mons (M2)": mairie-de-mons
+    - "Maison Des Enfants (M2)": maison-des-enfants
+    - "Marbrerie (M1)": marbrerie
+    - "Mercure (M2)": mercure
+    - "Mitterie (M2)": mitterie
+    - "Mons Sarts (M2)": mons-sarts
+    - "Montebello (M2)": montebello
+    - "Phalempins (M2)": phalempins
+    - "Pont De Bois (M1)": pont-de-bois
+    - "Pont De Neuville (M2)": pont-de-neuville
+    - "Pont Supérieur (M2)": pont-superieur
+    - "Port De Lille (M2)": port-de-lille
+    - "Porte D'Arras (M2)": porte-d-arras
+    - "Porte De Douai Jardin Des Plantes (M2)": porte-de-douai-jardin-des-plantes
+    - "Porte De Valenciennes (M2)": porte-de-valenciennes
+    - "Porte Des Postes (M1/M2)": porte-des-postes
+    - "Rihour (M1)": rihour
+    - "Roubaix Charles De Gaulle (M2)": roubaix-charles-de-gaulle
+    - "Roubaix Grand Place (M2)": roubaix-grand-place
+    - "République Beaux-Arts (M1)": republique-beaux-arts
+    - "Saint Maurice Pellevoisin (M2)": saint-maurice-pellevoisin
+    - "Saint Philibert (M2)": saint-philibert
+    - "Square Flandres (M1)": square-flandres
+    - "Tourcoing Centre (M2)": tourcoing-centre
+    - "Triolo (M1)": triolo
+    - "Villeneuve D'Ascq Hôtel De Ville (M1)": villeneuve-d-ascq-hotel-de-ville
+    - "Wasquehal Hôtel De Ville (M2)": wasquehal-hotel-de-ville
+    - "Wasquehal Pavé De Lille (M2)": wasquehal-pave-de-lille
+    - "Wazemmes (M1)": wazemmes
+- keyname: stop_name
+  name: Arrêt de bus ou de tram (facultatif)
+  field_type: string
+  optional: true
+  placeholder: République Beaux-Arts
+  help_text: "Nom de l'arrêt tel qu'affiché sur le poteau. Les accents et tirets sont ignorés. Laissez vide pour n'afficher que le métro."
+- keyname: stop_city
+  name: Commune de l'arrêt (facultatif)
+  field_type: string
+  optional: true
+  placeholder: Lille
+  help_text: "Utile quand plusieurs communes ont un arrêt du même nom (ex. « Republique » existe à Loos, Wattrelos, Houplines…)."
+- keyname: lines
+  name: Lignes de bus/tram à suivre (facultatif)
+  field_type: multi_string
+  optional: true
+  placeholder: L1, C1, TRAM
+  help_text: "Codes des lignes séparés par des virgules (ex. L1, C1, 18, TRAM). Vide = toutes les lignes de l'arrêt. Les perturbations affichées suivent ces lignes et la ligne de métro choisie."
+- keyname: max_departures
+  name: Nombre de passages métro affichés
+  field_type: number
+  default: 9
+  min: 1
+  max: 12
+  optional: true

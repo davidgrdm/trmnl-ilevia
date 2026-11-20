@@ -1,0 +1,9 @@
+dev/node_modules/
+dev/preview/
+dev/data*.json
+docs/metro/
+gtfs/
+gtfs.zip
+site/
+.DS_Store
+dist/

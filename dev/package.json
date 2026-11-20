@@ -1,0 +1,1 @@
+{ "name": "trmnl-ilevia-dev", "private": true, "type": "module", "dependencies": { "liquidjs": "10.21.1" } }

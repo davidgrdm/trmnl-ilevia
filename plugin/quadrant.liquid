@@ -1,0 +1,50 @@
+<div class="layout layout--col layout--top layout--stretch">
+  <div class="ilv" style="gap:6px">
+    {% if has_metro %}
+      {% assign d = m.directions.first %}
+      <div class="ilv-head">
+        <span class="ilv-badge ilv-badge--metro">{{ d.line }}</span>
+        <div style="min-width:0">
+          <div class="ilv-name" style="font-size:16px">{{ m.station }}</div>
+          <div class="ilv-sub">→ {{ d.terminus }}</div>
+        </div>
+      </div>
+      {% if d.ended %}
+        <div class="ilv-meta"><b>Service terminé</b>{% if d.next_first %}<br>reprise {{ d.next_first }}{% endif %}</div>
+      {% else %}
+        <div class="ilv-times">
+          {% for dep in d.departures limit: 3 %}<div class="ilv-time ilv-time--md">{{ dep.time }}</div>{% endfor %}
+        </div>
+        <div class="ilv-meta">{% if d.frequency %}{{ d.frequency }}{% endif %}{% if d.travel_minutes %} · {{ d.travel_minutes }} min de trajet{% endif %}</div>
+      {% endif %}
+    {% elsif has_surface %}
+      <div class="ilv-name" style="font-size:16px">{{ s.stop }}</div>
+      {% for g in s.groups limit: 4 %}
+        <div class="ilv-line">
+          <span class="ilv-badge ilv-badge--sm">{{ g.line }}</span>
+          <span class="ilv-dir" style="font-size:13px">{{ g.direction }}</span>
+          <span class="ilv-dep" style="font-size:15px">{{ g.times.first }}</span>
+        </div>
+      {% else %}
+        <div class="ilv-empty">Aucun passage prévu.</div>
+      {% endfor %}
+    {% endif %}
+
+    <div style="flex:1"></div>
+    {% if ilevia.alert_count > 0 %}
+      {% assign a = ilevia.alerts.first %}
+      <div class="ilv-alert {% if a.severe %}ilv-alert--severe{% endif %}" style="padding:2px 6px">
+        <span class="ilv-badge ilv-badge--sm">{{ a.line }}</span>
+        <div class="ilv-alert-text ilv-alert-text--1" style="font-size:12px">{{ a.text }}</div>
+      </div>
+    {% else %}
+      <div class="ilv-ok" style="font-size:12px"><span class="ilv-badge ilv-badge--sm">OK</span> Trafic normal</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <img class="image" src="{{ ilv_icon }}" />
+  <span class="title">Ilévia</span>
+  <span class="instance">{{ ilevia.updated }}</span>
+</div>

@@ -1,0 +1,35 @@
+<style>
+  .ilv { display: flex; flex-direction: column; gap: 10px; width: 100%; height: 100%; }
+  .ilv-row { display: flex; gap: 16px; flex: 1 1 auto; min-height: 0; }
+  .ilv-col { display: flex; flex-direction: column; gap: 6px; flex: 1 1 0; min-width: 0; }
+  .ilv-head { display: flex; align-items: center; gap: 8px; }
+  .ilv-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 26px; padding: 0 6px; border-radius: 6px; background: #000; color: #fff; font-weight: 700; font-size: 16px; line-height: 1; white-space: nowrap; }
+  .ilv-badge--metro { border-radius: 50%; min-width: 30px; width: 30px; height: 30px; font-size: 15px; }
+  .ilv-badge--sm { min-width: 28px; height: 20px; font-size: 13px; padding: 0 4px; }
+  .ilv-name { font-weight: 700; font-size: 18px; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ilv-sub { font-size: 14px; line-height: 1.2; color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ilv-times { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px; }
+  .ilv-time { font-size: 34px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
+  .ilv-time--md { font-size: 26px; }
+  .ilv-time--sm { font-size: 20px; }
+  .ilv-arr { font-size: 13px; color: #555; line-height: 1.2; }
+  .ilv-meta { font-size: 14px; line-height: 1.3; }
+  .ilv-rule { border-top: 2px solid #000; }
+  .ilv-dotted { border-top: 1px dashed #888; }
+  .ilv-line { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+  .ilv-line + .ilv-line { border-top: 1px dashed #aaa; }
+  .ilv-dir { flex: 1 1 auto; min-width: 0; font-size: 15px; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ilv-dep { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ilv-alert { display: flex; gap: 8px; align-items: flex-start; border: 2px solid #000; border-radius: 8px; padding: 5px 8px; }
+  .ilv-alert--severe { background: #000; color: #fff; }
+  .ilv-alert--severe .ilv-badge { background: #fff; color: #000; }
+  .ilv-alert-text { font-size: 14px; line-height: 1.25; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  .ilv-alert-text--1 { -webkit-line-clamp: 1; }
+  .ilv-ok { font-size: 14px; display: flex; gap: 6px; align-items: center; }
+  .ilv-empty { font-size: 16px; color: #555; }
+</style>
+{% assign m = ilevia.metro %}
+{% assign s = ilevia.surface %}
+{% if m and m.directions.size > 0 %}{% assign has_metro = true %}{% else %}{% assign has_metro = false %}{% endif %}
+{% if s %}{% assign has_surface = true %}{% else %}{% assign has_surface = false %}{% endif %}
+{% capture ilv_icon %}data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='11' fill='black'/><path d='M6 17V7h2.2l3.8 5.2L15.8 7H18v10h-2.3v-6.4L12 15.5l-3.7-4.9V17z' fill='white'/></svg>{% endcapture %}

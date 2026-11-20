@@ -1,0 +1,65 @@
+<div class="layout layout--col layout--top layout--stretch">
+  <div class="ilv" style="gap:6px">
+    <div class="ilv-row">
+      {% if has_metro %}
+      {% assign d = m.directions.first %}
+      <div class="ilv-col">
+        <div class="ilv-head">
+          <span class="ilv-badge ilv-badge--metro">{{ d.line }}</span>
+          <div style="min-width:0">
+            <div class="ilv-name">{{ m.station }}</div>
+            <div class="ilv-sub">→ {{ d.terminus }}</div>
+          </div>
+        </div>
+        {% if d.ended %}
+          <div class="ilv-meta"><b>Service terminé</b>{% if d.next_first %} · reprise {{ d.next_first }}{% endif %}</div>
+        {% else %}
+          <div class="ilv-times">
+            {% for dep in d.departures limit: 3 %}
+            <div>
+              <div class="ilv-time ilv-time--md">{{ dep.time }}</div>
+              {% if dep.arrival %}<div class="ilv-arr">arr. {{ dep.arrival }}</div>{% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          <div class="ilv-meta">{% if d.frequency %}{{ d.frequency }}{% endif %}{% if d.last %} · dernier {{ d.last }}{% endif %}</div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if has_surface %}
+      <div class="ilv-col">
+        <div class="ilv-head"><span class="ilv-badge ilv-badge--sm">BUS</span><div class="ilv-name" style="font-size:16px">{{ s.stop }}</div></div>
+        {% if s.empty %}
+          <div class="ilv-empty">Aucun passage prévu.</div>
+        {% else %}
+          <div>
+          {% if has_metro %}{% assign gmax = 3 %}{% else %}{% assign gmax = 4 %}{% endif %}
+          {% for g in s.groups limit: gmax %}
+            <div class="ilv-line">
+              <span class="ilv-badge ilv-badge--sm">{{ g.line }}</span>
+              <span class="ilv-dir">{{ g.direction }}</span>
+              <span class="ilv-dep">{{ g.times | slice: 0, 2 | join: "  " }}</span>
+            </div>
+          {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    {% if ilevia.alert_count > 0 %}
+      {% assign a = ilevia.alerts.first %}
+      <div class="ilv-alert {% if a.severe %}ilv-alert--severe{% endif %}" style="padding:3px 6px">
+        <span class="ilv-badge ilv-badge--sm">{{ a.line }}</span>
+        <div class="ilv-alert-text ilv-alert-text--1">{% if ilevia.alert_count > 1 %}({{ ilevia.alert_count }}) {% endif %}{{ a.text }}</div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <img class="image" src="{{ ilv_icon }}" />
+  <span class="title">Ilévia</span>
+  <span class="instance">màj {{ ilevia.updated }}</span>
+</div>

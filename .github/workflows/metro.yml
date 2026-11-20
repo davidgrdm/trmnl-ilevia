@@ -1,0 +1,52 @@
+name: Horaires métro (GitHub Pages)
+
+# Régénère chaque nuit les horaires théoriques du métro à partir du GTFS Ilévia
+# et les publie sur GitHub Pages (consommés par plugin/transform.js).
+on:
+  schedule:
+    - cron: "15 2 * * *" # 03h15 (hiver) / 04h15 (été), heure de Paris
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scripts/**", ".github/workflows/metro.yml"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Télécharger le GTFS Ilévia
+        run: |
+          curl -fsSL --retry 3 -o gtfs.zip https://media.ilevia.fr/opendata/gtfs.zip
+          unzip -q gtfs.zip -d gtfs
+      - name: Générer les horaires par station
+        run: |
+          mkdir -p site
+          cp docs/index.html site/ 2>/dev/null || true
+          python3 scripts/build_metro.py gtfs site 3
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
