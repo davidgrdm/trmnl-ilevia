@@ -23,7 +23,7 @@ async function run(input) {
       .map((s) => String(s).trim())
       .filter(Boolean),
     lines: toList(settings.lines).map((l) => l.toUpperCase()),
-    max: clampInt(settings.max_departures, 1, 12, 9),
+    max: 3, // l'écran affiche les 3 prochains passages
   };
   if (cfg.metroStation === "none") cfg.metroStation = "";
   if (cfg.metroDestination === "none") cfg.metroDestination = "";
@@ -306,7 +306,3 @@ function clean(v) {
   return v === undefined || v === null ? "" : String(v).trim();
 }
 
-function clampInt(v, min, max, dflt) {
-  const n = parseInt(v, 10);
-  return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : dflt;
-}

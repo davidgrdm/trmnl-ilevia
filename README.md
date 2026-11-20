@@ -12,7 +12,7 @@ Configuration par défaut : **métro M1, République Beaux-Arts → CHU Eurasant
 | Métro M1/M2 | GTFS Ilévia → horaires théoriques pré-calculés chaque nuit | ❌ non : Ilévia ne publie **pas** le métro en temps réel en open data |
 | Perturbations | Jeu « perturbations » de l'open data MEL (métro compris) | ✅ oui |
 
-> J'ai vérifié les trois flux temps réel d'Ilévia (API prochains passages, GTFS-RT, SIRI). Aucun ne contient le métro en direct. Les rares entrées M1 du flux SIRI sont figées depuis septembre. Pour le métro, qui passe toutes les 1 à 4 min, on affiche donc les horaires prévus, la fréquence, le dernier métro et les perturbations en cours.
+> J'ai vérifié les trois flux temps réel d'Ilévia (API prochains passages, GTFS-RT, SIRI). Aucun ne contient le métro en direct. Les rares entrées M1 du flux SIRI sont figées depuis septembre. Pour le métro, qui passe toutes les 1 à 4 min, on affiche donc les 3 prochains passages prévus et les perturbations en cours. Les fréquences et horaires de service sont indiqués dans la page de configuration.
 
 **Rafraîchissement :** TRMNL interroge un plugin au plus toutes les **15 minutes**. L'écran affiche donc des **heures de passage** (« 17h23 ») et non des comptes à rebours (« dans 3 min »), avec l'heure de mise à jour dans la barre du bas.
 
@@ -24,11 +24,10 @@ Configuration par défaut : **métro M1, République Beaux-Arts → CHU Eurasant
 - **Arrêt de bus/tram** : nom libre, tolérant aux accents et aux tirets. Champ **commune** facultatif pour départager les homonymes.
 - **Lignes** : liste de lignes de bus/tram, par exemple `L1, C1, TRAM`. Vide = toutes les lignes de l'arrêt.
 - **Directions de bus/tram** : une partie du nom du terminus, par exemple `Faches, Porte des Postes`. Vide = toutes les directions. Si rien ne correspond, l'écran liste les directions disponibles à cet arrêt.
-- **Nombre de passages métro**.
 
 Pour suivre plusieurs trajets, créez plusieurs instances du plugin (une par arrêt), puis combinez-les dans un *mashup*.
 
-Les 4 formats TRMNL sont gérés : `full`, `half_horizontal`, `half_vertical`, `quadrant`.
+L'écran montre toujours les **3 prochains passages** de chaque ligne, en gros caractères. Les 4 formats TRMNL sont gérés : `full`, `half_horizontal`, `half_vertical`, `quadrant`.
 
 ## Architecture
 

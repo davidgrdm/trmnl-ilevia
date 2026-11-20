@@ -1,54 +1,81 @@
 <style>
-  .ilv { display: flex; flex-direction: column; gap: 10px; width: 100%; height: 100%; }
-  .ilv-row { display: flex; gap: 16px; flex: 1 1 auto; min-height: 0; }
-  .ilv-col { display: flex; flex-direction: column; gap: 6px; flex: 1 1 0; min-width: 0; }
-  .ilv-head { display: flex; align-items: center; gap: 8px; }
-  .ilv-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 26px; padding: 0 6px; border-radius: 6px; background: #000; color: #fff; font-weight: 700; font-size: 16px; line-height: 1; white-space: nowrap; }
-  .ilv-badge--metro { border-radius: 50%; min-width: 30px; width: 30px; height: 30px; font-size: 15px; }
-  .ilv-badge--sm { min-width: 28px; height: 20px; font-size: 13px; padding: 0 4px; }
-  .ilv-name { font-weight: 700; font-size: 18px; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .ilv-sub { font-size: 14px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .ilv-times { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 10px; }
-  .ilv-time { font-size: 34px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
-  .ilv-time--md { font-size: 26px; }
-  .ilv-time--sm { font-size: 20px; }
-  .ilv-arr { font-size: 13px; line-height: 1.2; }
-  .ilv-meta { font-size: 14px; line-height: 1.3; }
-  .ilv-rule { border-top: 2px solid #000; }
-  .ilv-dotted { border-top: 1px dashed #000; }
-  .ilv-line { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
-  .ilv-line + .ilv-line { border-top: 1px dashed #000; }
-  .ilv-dir { flex: 1 1 auto; min-width: 0; font-size: 15px; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .ilv-dep { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .ilv-alert { display: flex; gap: 8px; align-items: flex-start; border: 2px solid #000; border-radius: 8px; padding: 5px 8px; }
-  .ilv-alert--severe { background: #000; color: #fff; }
-  .ilv-alert--severe .ilv-badge { background: #fff; color: #000; }
-  .ilv-alert-text { font-size: 14px; line-height: 1.25; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
-  .ilv-alert-text--1 { -webkit-line-clamp: 1; }
-  .ilv-ok { font-size: 14px; display: flex; gap: 6px; align-items: center; }
-  .ilv-empty { font-size: 16px; }
-  .ilv--tight { gap: 6px; }
-  .ilv--snug { gap: 8px; }
-  .ilv-col--wide { flex: 1.15 1 0; }
+  /* Toutes les tailles passent par --k : 1 sur TRMNL OG (800x480), plus grand sur TRMNL X. */
+  .ilv { --k: 1; display: flex; flex-direction: column; gap: calc(10px * var(--k)); width: 100%; height: 100%; }
+  .screen--lg .ilv { --k: 1.3; }
+  .ilv-row { display: flex; gap: calc(20px * var(--k)); flex: 1 1 auto; min-height: 0; }
+  .ilv-col { display: flex; flex-direction: column; gap: calc(8px * var(--k)); flex: 1 1 0; min-width: 0; }
+  .ilv-col--wide { flex: 1.2 1 0; }
   .ilv-grow { flex: 1 1 auto; }
   .ilv-min0 { min-width: 0; }
+
+  /* En-têtes : pastille de ligne + nom de station / arrêt */
+  .ilv-head { display: flex; align-items: center; gap: calc(10px * var(--k)); }
+  .ilv-badge { display: inline-flex; align-items: center; justify-content: center; flex: none; min-width: calc(40px * var(--k)); height: calc(30px * var(--k)); padding: 0 calc(7px * var(--k)); border-radius: calc(7px * var(--k)); background: #000; color: #fff; font-weight: 700; font-size: calc(19px * var(--k)); line-height: 1; white-space: nowrap; }
+  .ilv-badge--metro { border-radius: 50%; min-width: 0; width: calc(40px * var(--k)); height: calc(40px * var(--k)); padding: 0; font-size: calc(19px * var(--k)); }
+  .ilv-badge--sm { min-width: calc(34px * var(--k)); height: calc(26px * var(--k)); font-size: calc(17px * var(--k)); padding: 0 calc(5px * var(--k)); }
+  .ilv-name { font-weight: 700; font-size: calc(24px * var(--k)); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ilv-sub { font-size: calc(19px * var(--k)); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Heures de passage : 3 colonnes, en grand */
+  .ilv-times { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(4px * var(--k)) calc(12px * var(--k)); }
+  .ilv-time { font-size: calc(46px * var(--k)); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -1px; white-space: nowrap; }
+  .ilv-time--xl { font-size: calc(64px * var(--k)); }
+  .ilv-time--md { font-size: calc(36px * var(--k)); }
+  .ilv-time--sm { font-size: calc(30px * var(--k)); }
+  .ilv-arr { font-size: calc(18px * var(--k)); line-height: 1.25; white-space: nowrap; }
+  .ilv-meta { font-size: calc(19px * var(--k)); line-height: 1.3; }
+
+  /* Bus / tram : une ligne + direction, puis ses 3 prochains passages */
+  .ilv-group { display: flex; flex-direction: column; gap: calc(2px * var(--k)); padding: calc(5px * var(--k)) 0; }
+  .ilv-group + .ilv-group { border-top: 1px dashed #000; }
+  .ilv-groups--2col { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(20px * var(--k)); }
+  .ilv-groups--2col .ilv-group + .ilv-group { border-top: none; }
+  .ilv-groups--2col .ilv-group:nth-child(n+3) { border-top: 1px dashed #000; }
+  .ilv-dir { flex: 1 1 auto; min-width: 0; font-size: calc(19px * var(--k)); line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ilv-deps { display: flex; gap: calc(16px * var(--k)); font-size: calc(28px * var(--k)); font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ilv-deps--sm { font-size: calc(24px * var(--k)); gap: calc(12px * var(--k)); }
+
+  .ilv-rule { border-top: 2px solid #000; }
+  .ilv-dotted { border-top: 1px dashed #000; }
+
+  /* Perturbations */
+  .ilv-alert { display: flex; gap: calc(8px * var(--k)); align-items: flex-start; border: 2px solid #000; border-radius: calc(8px * var(--k)); padding: calc(5px * var(--k)) calc(8px * var(--k)); }
+  .ilv-alert--severe { background: #000; color: #fff; }
+  .ilv-alert--severe .ilv-badge { background: #fff; color: #000; }
+  .ilv-alert-text { font-size: calc(17px * var(--k)); line-height: 1.25; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  .ilv-alert-text--1 { -webkit-line-clamp: 1; }
+  .ilv-ok { font-size: calc(17px * var(--k)); display: flex; gap: calc(8px * var(--k)); align-items: center; }
+  .ilv-empty { font-size: calc(18px * var(--k)); line-height: 1.3; }
   .ilv-strong { font-weight: 700; }
-  .ilv-alert--tight { padding: 3px 6px; }
-  .ilv-alert--xtight { padding: 2px 6px; }
-  .ilv-fs12 { font-size: 12px; } .ilv-fs13 { font-size: 13px; } .ilv-fs14 { font-size: 14px; }
-  .ilv-fs15 { font-size: 15px; } .ilv-fs16 { font-size: 16px; } .ilv-fs22 { font-size: 22px; }
+
+  /* Vues plus petites */
+  .view--half_horizontal .ilv-name, .view--quadrant .ilv-name { font-size: calc(21px * var(--k)); }
+  .view--half_horizontal .ilv-sub, .view--quadrant .ilv-sub { font-size: calc(17px * var(--k)); }
+  .view--half_horizontal .ilv-badge--metro, .view--quadrant .ilv-badge--metro { width: calc(34px * var(--k)); height: calc(34px * var(--k)); font-size: calc(17px * var(--k)); }
+  .view--quadrant .ilv-arr, .view--half_horizontal .ilv-arr { font-size: calc(16px * var(--k)); }
+  /* Demi-écran horizontal (180 px utiles en hauteur) : tout est resserré verticalement */
+  .view--half_horizontal .ilv { gap: calc(6px * var(--k)); }
+  .view--half_horizontal .ilv-col { gap: calc(3px * var(--k)); }
+  .view--half_horizontal .ilv-group, .view--quadrant .ilv-group { padding: calc(2px * var(--k)) 0; gap: 0; }
+  .view--quadrant .ilv { gap: calc(6px * var(--k)); }
+  .view--half_horizontal .ilv-dir { font-size: calc(17px * var(--k)); }
+  .view--half_horizontal .ilv-deps--sm { font-size: calc(23px * var(--k)); }
+  .view--half_vertical .ilv { gap: calc(6px * var(--k)); }
+  .view--half_vertical .ilv-group { padding: calc(3px * var(--k)) 0; }
+  .view--half_horizontal .ilv-alert, .view--quadrant .ilv-alert { padding: calc(2px * var(--k)) calc(6px * var(--k)); }
+  .view--half_horizontal .ilv-alert-text, .view--quadrant .ilv-alert-text { font-size: calc(16px * var(--k)); }
+
   /* Portrait : on empile métro et bus au lieu de les mettre côte à côte */
-  .screen--portrait .view--full .ilv-row, .screen--portrait .view--half_horizontal .ilv-row { flex-direction: column; gap: 6px; }
-  /* Colonnes étroites en portrait (240 px) : 2 heures par ligne */
-  .screen--portrait .view--half_vertical .ilv-times, .screen--portrait .view--quadrant .ilv-times { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .screen--portrait .view--half_vertical .ilv-time, .screen--portrait .view--quadrant .ilv-time { font-size: 22px; }
-  /* Grands écrans (TRMNL X, 1040x780) : textes un peu plus grands */
-  .screen--lg .ilv-time { font-size: 44px; }
-  .screen--lg .ilv-time--md { font-size: 32px; }
-  .screen--lg .ilv-name { font-size: 22px; }
-  .screen--lg .ilv-dir, .screen--lg .ilv-meta, .screen--lg .ilv-sub { font-size: 17px; }
-  .screen--lg .ilv-dep { font-size: 20px; }
-  .screen--lg .ilv-alert-text { font-size: 16px; }
+  .screen--portrait .view--full .ilv-row, .screen--portrait .view--half_horizontal .ilv-row { flex-direction: column; gap: calc(8px * var(--k)); }
+  .screen--portrait .ilv-groups--2col { grid-template-columns: 1fr; }
+  /* Colonnes étroites en portrait (240 px) : heures plus petites */
+  .screen--portrait .view--half_vertical .ilv-time, .screen--portrait .view--quadrant .ilv-time { font-size: calc(22px * var(--k)); letter-spacing: -0.5px; }
+  .screen--portrait .view--half_vertical .ilv-times, .screen--portrait .view--quadrant .ilv-times { column-gap: calc(6px * var(--k)); }
+  .screen--portrait .view--half_vertical .ilv-deps, .screen--portrait .view--quadrant .ilv-deps { font-size: calc(19px * var(--k)); gap: calc(8px * var(--k)); }
+  .screen--portrait .view--half_vertical .ilv-arr, .screen--portrait .view--quadrant .ilv-arr { font-size: calc(13px * var(--k)); }
+  .screen--portrait .view--half_vertical .ilv-name, .screen--portrait .view--quadrant .ilv-name { font-size: calc(18px * var(--k)); }
+  .screen--portrait .view--half_vertical .ilv-sub, .screen--portrait .view--quadrant .ilv-sub,
+  .screen--portrait .view--half_vertical .ilv-dir, .screen--portrait .view--quadrant .ilv-dir { font-size: calc(15px * var(--k)); }
 </style>
 {% assign m = ilevia.metro %}
 {% assign s = ilevia.surface %}
