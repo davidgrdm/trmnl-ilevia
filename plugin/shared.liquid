@@ -7,17 +7,17 @@
   .ilv-badge--metro { border-radius: 50%; min-width: 30px; width: 30px; height: 30px; font-size: 15px; }
   .ilv-badge--sm { min-width: 28px; height: 20px; font-size: 13px; padding: 0 4px; }
   .ilv-name { font-weight: 700; font-size: 18px; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .ilv-sub { font-size: 14px; line-height: 1.2; color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .ilv-times { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px; }
+  .ilv-sub { font-size: 14px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ilv-times { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 10px; }
   .ilv-time { font-size: 34px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
   .ilv-time--md { font-size: 26px; }
   .ilv-time--sm { font-size: 20px; }
-  .ilv-arr { font-size: 13px; color: #555; line-height: 1.2; }
+  .ilv-arr { font-size: 13px; line-height: 1.2; }
   .ilv-meta { font-size: 14px; line-height: 1.3; }
   .ilv-rule { border-top: 2px solid #000; }
-  .ilv-dotted { border-top: 1px dashed #888; }
+  .ilv-dotted { border-top: 1px dashed #000; }
   .ilv-line { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
-  .ilv-line + .ilv-line { border-top: 1px dashed #aaa; }
+  .ilv-line + .ilv-line { border-top: 1px dashed #000; }
   .ilv-dir { flex: 1 1 auto; min-width: 0; font-size: 15px; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .ilv-dep { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .ilv-alert { display: flex; gap: 8px; align-items: flex-start; border: 2px solid #000; border-radius: 8px; padding: 5px 8px; }
@@ -26,11 +26,34 @@
   .ilv-alert-text { font-size: 14px; line-height: 1.25; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .ilv-alert-text--1 { -webkit-line-clamp: 1; }
   .ilv-ok { font-size: 14px; display: flex; gap: 6px; align-items: center; }
-  .ilv-empty { font-size: 16px; color: #555; }
+  .ilv-empty { font-size: 16px; }
+  .ilv--tight { gap: 6px; }
+  .ilv--snug { gap: 8px; }
+  .ilv-col--wide { flex: 1.15 1 0; }
+  .ilv-grow { flex: 1 1 auto; }
+  .ilv-min0 { min-width: 0; }
+  .ilv-strong { font-weight: 700; }
+  .ilv-alert--tight { padding: 3px 6px; }
+  .ilv-alert--xtight { padding: 2px 6px; }
+  .ilv-fs12 { font-size: 12px; } .ilv-fs13 { font-size: 13px; } .ilv-fs14 { font-size: 14px; }
+  .ilv-fs15 { font-size: 15px; } .ilv-fs16 { font-size: 16px; } .ilv-fs22 { font-size: 22px; }
+  /* Portrait : on empile métro et bus au lieu de les mettre côte à côte */
+  .screen--portrait .view--full .ilv-row, .screen--portrait .view--half_horizontal .ilv-row { flex-direction: column; gap: 6px; }
+  /* Colonnes étroites en portrait (240 px) : 2 heures par ligne */
+  .screen--portrait .view--half_vertical .ilv-times, .screen--portrait .view--quadrant .ilv-times { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .screen--portrait .view--half_vertical .ilv-time, .screen--portrait .view--quadrant .ilv-time { font-size: 22px; }
+  /* Grands écrans (TRMNL X, 1040x780) : textes un peu plus grands */
+  .screen--lg .ilv-time { font-size: 44px; }
+  .screen--lg .ilv-time--md { font-size: 32px; }
+  .screen--lg .ilv-name { font-size: 22px; }
+  .screen--lg .ilv-dir, .screen--lg .ilv-meta, .screen--lg .ilv-sub { font-size: 17px; }
+  .screen--lg .ilv-dep { font-size: 20px; }
+  .screen--lg .ilv-alert-text { font-size: 16px; }
 </style>
 {% assign m = ilevia.metro %}
 {% assign s = ilevia.surface %}
 {% if m and m.directions.size > 0 %}{% assign has_metro = true %}{% else %}{% assign has_metro = false %}{% endif %}
 {% if s %}{% assign has_surface = true %}{% else %}{% assign has_surface = false %}{% endif %}
+{% assign ilv_big = false %}{% if trmnl.device.width > 1000 or trmnl.device.height > 1000 %}{% assign ilv_big = true %}{% endif %}
 {% capture ilv_empty %}{% if s.filtered_out %}Aucune direction ne correspond au filtre. Disponibles : {{ s.available_directions | join: " · " }}{% else %}Aucun passage prévu dans l'heure — vérifiez le nom de l'arrêt et les lignes.{% endif %}{% endcapture %}
 {% capture ilv_icon %}data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='11' fill='black'/><path d='M6 17V7h2.2l3.8 5.2L15.8 7H18v10h-2.3v-6.4L12 15.5l-3.7-4.9V17z' fill='white'/></svg>{% endcapture %}

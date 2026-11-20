@@ -1,7 +1,7 @@
 ---
 # Ilévia (Lille) pour TRMNL — métro, tram et bus.
-# ⚠️ Remplacez REPLACE_ME par votre compte GitHub (ici et dans transform.js), voir README.
-name: Ilévia — métro, tram, bus
+# REPLACE_ME est remplacé par le compte GitHub au moment du packaging (scripts/package.sh).
+name: Ilévia Lille — métro, tram, bus
 strategy: polling
 refresh_interval: 15
 polling_url: https://REPLACE_ME.github.io/trmnl-ilevia/metro/index.json
@@ -11,10 +11,24 @@ no_screen_padding: 'no'
 dark_mode: 'no'
 custom_fields:
 - keyname: about
-  name: À propos
+  name: About This Plugin
   field_type: author_bio
   category: travel
-  description: "Prochains passages du réseau Ilévia (Métropole Européenne de Lille). Bus et tram : temps réel (open data MEL). Métro : horaires théoriques (Ilévia ne publie pas le métro en temps réel), avec les perturbations en direct."
+  description: >-
+    <b>Ilévia Lille — métro, tram, bus.</b> Affiche les prochains passages du réseau Ilévia
+    (Métropole Européenne de Lille) sur votre écran : une station de métro avec ses prochains
+    départs, l'heure d'arrivée à la station de votre choix, la fréquence et le dernier métro ;
+    un arrêt de bus ou de tram avec les lignes et directions que vous suivez ; et les
+    perturbations en cours sur ces lignes. Bus et tram sont en temps réel. Le métro affiche les
+    horaires théoriques, car Ilévia ne publie pas le métro en temps réel en open data.
+    Données rafraîchies toutes les 15 minutes, d'où l'affichage en heures (17h23) plutôt qu'en minutes.<br/><br/>
+    <b>English:</b> shows upcoming departures for the Lille (France) public transport network:
+    a metro station with scheduled departures, arrival time and frequency, a bus or tram stop with
+    real-time departures filtered by line and direction, and live service disruptions.<br/><br/>
+    Données : Ilévia / Métropole Européenne de Lille, open data (Licence Ouverte). Code source,
+    questions et suggestions :
+    <a class="underline" href="https://github.com/REPLACE_ME/trmnl-ilevia">github.com/REPLACE_ME/trmnl-ilevia</a>
+    (onglet Issues).
 - keyname: metro_station
   name: Station de métro
   field_type: select

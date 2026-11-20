@@ -6,19 +6,19 @@
 
     <div class="ilv-row">
       {% if has_metro %}
-      <div class="ilv-col" {% if has_surface %}style="flex: 1.15 1 0"{% endif %}>
+      <div class="ilv-col{% if has_surface %} ilv-col--wide{% endif %}">
         {% if m.directions.size > 1 %}
           <div class="ilv-head"><div class="ilv-name">{{ m.station }}</div></div>
           {% for d in m.directions limit: 4 %}
             <div class="ilv-dotted"></div>
             <div class="ilv-head">
               <span class="ilv-badge ilv-badge--metro">{{ d.line }}</span>
-              <div style="min-width:0; flex:1">
-                <div class="ilv-sub" style="color:#000"><b>→ {{ d.terminus }}</b>{% if d.frequency %} · {{ d.frequency }}{% endif %}</div>
+              <div class="ilv-min0 ilv-grow">
+                <div class="ilv-sub ilv-strong"><b>→ {{ d.terminus }}</b>{% if d.frequency %} · {{ d.frequency }}{% endif %}</div>
                 {% if d.ended %}
                   <div class="ilv-meta">Service terminé{% if d.next_first %} · reprise {{ d.next_first }}{% endif %}</div>
                 {% else %}
-                  <div class="ilv-dep" style="font-size:22px">{{ d.departures | map: "time" | slice: 0, 4 | join: "  " }}</div>
+                  <div class="ilv-dep ilv-fs22">{{ d.departures | map: "time" | slice: 0, 4 | join: "  " }}</div>
                 {% endif %}
               </div>
             </div>
@@ -27,7 +27,7 @@
         {% for d in m.directions limit: 1 %}{% if m.directions.size > 1 %}{% break %}{% endif %}
           <div class="ilv-head">
             <span class="ilv-badge ilv-badge--metro">{{ d.line }}</span>
-            <div style="min-width:0">
+            <div class="ilv-min0">
               <div class="ilv-name">{{ m.station }}</div>
               <div class="ilv-sub">→ {{ d.terminus }}{% if d.destination and d.destination != d.terminus %} · arrivée {{ d.destination }}{% endif %}</div>
             </div>
@@ -63,7 +63,7 @@
           <div class="ilv-empty">{{ ilv_empty }}</div>
         {% else %}
           <div>
-          {% if has_metro %}{% assign gmax = 7 %}{% else %}{% assign gmax = 10 %}{% endif %}
+          {% if has_metro %}{% assign gmax = 7 %}{% else %}{% assign gmax = 10 %}{% endif %}{% if ilv_big %}{% assign gmax = gmax | plus: 5 %}{% endif %}
           {% for g in s.groups limit: gmax %}
             <div class="ilv-line">
               <span class="ilv-badge ilv-badge--sm">{{ g.line }}</span>

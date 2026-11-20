@@ -1,11 +1,11 @@
 <div class="layout layout--col layout--top layout--stretch">
-  <div class="ilv" style="gap:8px">
+  <div class="ilv ilv--snug">
     {% if has_metro %}
     {% for d in m.directions limit: 2 %}
       {% unless forloop.first %}<div class="ilv-dotted"></div>{% endunless %}
       <div class="ilv-head">
         <span class="ilv-badge ilv-badge--metro">{{ d.line }}</span>
-        <div style="min-width:0">
+        <div class="ilv-min0">
           <div class="ilv-name">{{ m.station }}</div>
           <div class="ilv-sub">→ {{ d.terminus }}</div>
         </div>
@@ -29,12 +29,12 @@
 
     {% if has_surface %}
       {% if has_metro %}<div class="ilv-rule"></div>{% endif %}
-      <div class="ilv-head"><span class="ilv-badge ilv-badge--sm">BUS</span><div class="ilv-name" style="font-size:16px">{{ s.stop }}</div></div>
+      <div class="ilv-head"><span class="ilv-badge ilv-badge--sm">BUS</span><div class="ilv-name ilv-fs16">{{ s.stop }}</div></div>
       {% if s.empty %}
-        <div class="ilv-empty" style="font-size:14px">{{ ilv_empty }}</div>
+        <div class="ilv-empty ilv-fs14">{{ ilv_empty }}</div>
       {% else %}
         <div>
-        {% if has_metro %}{% assign gmax = 5 %}{% else %}{% assign gmax = 10 %}{% endif %}
+        {% if has_metro %}{% assign gmax = 5 %}{% else %}{% assign gmax = 10 %}{% endif %}{% if ilv_big %}{% assign gmax = gmax | plus: 4 %}{% endif %}
         {% for g in s.groups limit: gmax %}
           <div class="ilv-line">
             <span class="ilv-badge ilv-badge--sm">{{ g.line }}</span>
@@ -46,7 +46,7 @@
       {% endif %}
     {% endif %}
 
-    <div style="flex:1"></div>
+    <div class="ilv-grow"></div>
     {% if ilevia.alert_count > 0 %}
       {% assign a = ilevia.alerts.first %}
       <div class="ilv-alert {% if a.severe %}ilv-alert--severe{% endif %}">
