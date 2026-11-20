@@ -23,6 +23,7 @@ Configuration par défaut : **métro M1, République Beaux-Arts → CHU Eurasant
 - **Station d'arrivée** : affiche l'heure d'arrivée estimée.
 - **Arrêt de bus/tram** : nom libre, tolérant aux accents et aux tirets. Champ **commune** facultatif pour départager les homonymes.
 - **Lignes** : liste de lignes de bus/tram, par exemple `L1, C1, TRAM`. Vide = toutes les lignes de l'arrêt.
+- **Directions de bus/tram** : une partie du nom du terminus, par exemple `Faches, Porte des Postes`. Vide = toutes les directions. Si rien ne correspond, l'écran liste les directions disponibles à cet arrêt.
 - **Nombre de passages métro**.
 
 Pour suivre plusieurs trajets, créez plusieurs instances du plugin (une par arrêt), puis combinez-les dans un *mashup*.
@@ -84,6 +85,8 @@ La dernière commande écrit `dev/preview/index.html` (aperçu des 4 formats). `
 
 - `heure_estimee_depart` (bus/tram) porte un suffixe `Z` mais c'est en réalité l'**heure locale** de Lille. Le code la traite comme telle.
 - Les noms d'arrêts de l'API sont en majuscules sans accents (`REPUBLIQUE BEAUX ARTS`), et plusieurs communes partagent le même nom d'arrêt.
+- Le bus et le tram ne nomment pas toujours un arrêt pareil : `GARE LILLE FLANDRES` côté bus, `LILLE FLANDRES` côté tram. La recherche ignore donc les mots génériques (gare, station, arrêt…).
+- Il n'y a pas d'heure d'arrivée pour le bus et le tram : l'API ne donne que les départs à chaque arrêt, sans identifiant de course pour suivre un véhicule.
 - Le jour de service du métro court jusqu'à ~1h du matin : avant 4h, on lit les horaires de la veille.
 - Les perturbations ciblent une ligne (`ILEVIA:LineRef::ME1:LOC` pour M1). Les emojis et liens sont retirés, car illisibles en e-ink.
 

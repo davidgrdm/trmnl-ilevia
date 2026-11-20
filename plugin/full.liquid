@@ -60,7 +60,7 @@
           <div class="ilv-name">{{ s.stop }}</div>
         </div>
         {% if s.empty %}
-          <div class="ilv-empty">Aucun passage prévu{% if s.groups.size == 0 %} — vérifiez le nom de l'arrêt et les lignes{% endif %}.</div>
+          <div class="ilv-empty">{{ ilv_empty }}</div>
         {% else %}
           <div>
           {% if has_metro %}{% assign gmax = 7 %}{% else %}{% assign gmax = 10 %}{% endif %}

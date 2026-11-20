@@ -19,6 +19,9 @@ async function run(input) {
     metroDestination: clean(settings.metro_destination),
     stopName: clean(settings.stop_name),
     city: clean(settings.stop_city),
+    directions: (Array.isArray(settings.bus_directions) ? settings.bus_directions : String(settings.bus_directions || "").split(/[,;]/))
+      .map((s) => String(s).trim())
+      .filter(Boolean),
     lines: toList(settings.lines).map((l) => l.toUpperCase()),
     max: clampInt(settings.max_departures, 1, 12, 9),
   };
@@ -122,7 +125,10 @@ function frequencyLabel(times) {
 
 function surfaceUrl(cfg) {
   // Recherche tolérante : "République Beaux-Arts" -> nom_station ILIKE '%REPUBLIQUE%BEAUX%ARTS%'
-  const words = normalize(cfg.stopName).split(" ").filter(Boolean);
+  // Les mots génériques sont ignorés dans la recherche : le tram nomme "LILLE FLANDRES" ce que le bus appelle "GARE LILLE FLANDRES".
+  const GENERIC = new Set(["GARE", "ARRET", "STATION", "METRO", "TRAM", "BUS"]);
+  const all = normalize(cfg.stopName).split(" ").filter(Boolean);
+  const words = all.filter((w) => !GENERIC.has(w)).length ? all.filter((w) => !GENERIC.has(w)) : all;
   let filter = `nom_station ILIKE '%${words.join("%")}%'`;
   if (cfg.lines.length) {
     const metroOnly = cfg.lines.every((l) => /^M[12]$/.test(l));
@@ -136,7 +142,7 @@ function surfaceUrl(cfg) {
 function buildSurface(data, cfg, now) {
   const rows = (data.features || []).map((f) => f.properties || {});
   if (!rows.length) {
-    return { stop: cfg.stopName.toUpperCase(), groups: [], empty: true, ambiguous: [] };
+    return { stop: cfg.stopName, groups: [], empty: true, filtered_out: false, available_directions: [], ambiguous: [] };
   }
   // Plusieurs arrêts peuvent correspondre : noms proches ("REPUBLIQUE" / "REPUBLIQUE BEAUX ARTS")
   // ou même nom dans plusieurs communes ("REPUBLIQUE" à Loos, Wattrelos, Houplines…).
@@ -166,10 +172,15 @@ function buildSurface(data, cfg, now) {
   // heure_estimee_depart est en heure locale malgré le suffixe "Z" (ex. 17:15:56Z = 17h15 à Lille).
   const nowKey = now.isoLocal; // "2026-11-20T17:16"
   const groups = new Map();
+  const allDirections = new Set();
+  // Filtre de direction : "Faches, Porte des Postes" garde toute direction contenant l'un des termes.
+  const dirTerms = cfg.directions.map(normalize).filter(Boolean);
   for (const r of rows) {
     if (keyOf(r) !== chosen) continue;
     const local = String(r.heure_estimee_depart || "").slice(0, 16);
     if (!local || local < nowKey) continue;
+    allDirections.add(`${r.code_ligne} → ${titleCase(r.sens_ligne)}`);
+    if (dirTerms.length && !dirTerms.some((t) => normalize(r.sens_ligne).includes(t))) continue;
     const key = `${r.code_ligne}|${r.sens_ligne}`;
     if (!groups.has(key)) groups.set(key, { line: r.code_ligne, mode: r.code_ligne === "TRAM" ? "tram" : "bus", direction: titleCase(r.sens_ligne), times: [], first: local });
     const g = groups.get(key);
@@ -182,6 +193,9 @@ function buildSurface(data, cfg, now) {
     stop: display + (sameNameElsewhere && chosenCity ? ` (${chosenCity})` : ""),
     groups: sorted,
     empty: sorted.length === 0,
+    // Si le filtre de direction ne garde rien, on liste les directions possibles pour aider à le corriger.
+    filtered_out: dirTerms.length > 0 && sorted.length === 0 && allDirections.size > 0,
+    available_directions: dirTerms.length > 0 && sorted.length === 0 ? [...allDirections].sort().slice(0, 8) : [],
     ambiguous: cfg.city || normalize(chosenName) === wanted && !sameNameElsewhere ? [] : ambiguous,
   };
 }

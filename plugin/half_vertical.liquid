@@ -31,7 +31,7 @@
       {% if has_metro %}<div class="ilv-rule"></div>{% endif %}
       <div class="ilv-head"><span class="ilv-badge ilv-badge--sm">BUS</span><div class="ilv-name" style="font-size:16px">{{ s.stop }}</div></div>
       {% if s.empty %}
-        <div class="ilv-empty">Aucun passage prévu.</div>
+        <div class="ilv-empty" style="font-size:14px">{{ ilv_empty }}</div>
       {% else %}
         <div>
         {% if has_metro %}{% assign gmax = 5 %}{% else %}{% assign gmax = 10 %}{% endif %}

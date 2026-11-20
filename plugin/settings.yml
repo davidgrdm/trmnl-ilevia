@@ -178,6 +178,12 @@ custom_fields:
   optional: true
   placeholder: L1, C1, TRAM
   help_text: "Codes des lignes séparés par des virgules (ex. L1, C1, 18, TRAM). Vide = toutes les lignes de l'arrêt. Les perturbations affichées suivent ces lignes et la ligne de métro choisie."
+- keyname: bus_directions
+  name: Directions de bus/tram à garder (facultatif)
+  field_type: multi_string
+  optional: true
+  placeholder: Faches, Porte des Postes
+  help_text: "Une partie du nom du terminus, séparée par des virgules (ex. « Faches » pour la L1 vers Faches Centre Commercial, « Tourcoing » pour le tram). Vide = toutes les directions. Si rien ne correspond, l'écran liste les directions disponibles."
 - keyname: max_departures
   name: Nombre de passages métro affichés
   field_type: number
