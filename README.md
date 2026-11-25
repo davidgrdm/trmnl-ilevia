@@ -12,7 +12,7 @@ Configuration par défaut : **métro M1, République Beaux-Arts → CHU Eurasant
 | Métro M1/M2 | GTFS Ilévia → horaires théoriques pré-calculés chaque nuit | ❌ non : Ilévia ne publie **pas** le métro en temps réel en open data |
 | Perturbations | Jeu « perturbations » de l'open data MEL (métro compris) | ✅ oui |
 
-> J'ai vérifié les trois flux temps réel d'Ilévia (API prochains passages, GTFS-RT, SIRI). Aucun ne contient le métro en direct. Les rares entrées M1 du flux SIRI sont figées depuis septembre. Pour le métro, qui passe toutes les 1 à 4 min, on affiche donc les 3 prochains passages prévus et les perturbations en cours. Les fréquences et horaires de service sont indiqués dans la page de configuration.
+> J'ai vérifié les trois flux temps réel d'Ilévia (API prochains passages, GTFS-RT, SIRI). Aucun ne contient le métro en direct. Les rares entrées M1 du flux SIRI sont figées depuis septembre. Pour le métro, qui passe toutes les 1 à 4 min, on affiche donc les 2 prochains passages prévus et les perturbations en cours. Les fréquences et horaires de service sont indiqués dans la page de configuration.
 
 **Rafraîchissement :** TRMNL interroge un plugin au plus toutes les **15 minutes**. L'écran affiche donc des **heures de passage** (« 17h23 ») et non des comptes à rebours (« dans 3 min »), avec l'heure de mise à jour dans la barre du bas.
 
@@ -27,7 +27,7 @@ Configuration par défaut : **métro M1, République Beaux-Arts → CHU Eurasant
 
 Pour suivre plusieurs trajets, créez plusieurs instances du plugin (une par arrêt), puis combinez-les dans un *mashup*.
 
-L'écran montre toujours les **3 prochains passages** de chaque ligne, en gros caractères. Les 4 formats TRMNL sont gérés : `full`, `half_horizontal`, `half_vertical`, `quadrant`.
+L'écran montre les **2 prochains métros** et les **3 prochains passages** de chaque ligne de bus/tram, en gros caractères. Les perturbations s'affichent dans une carte dédiée : en noir pour un incident en cours, encadrée pour une info trafic (travaux, interruptions prévues). Les 4 formats TRMNL sont gérés : `full`, `half_horizontal`, `half_vertical`, `quadrant`.
 
 ## Architecture
 
@@ -88,5 +88,6 @@ La dernière commande écrit `dev/preview/index.html` (aperçu des 4 formats). `
 - Il n'y a pas d'heure d'arrivée pour le bus et le tram : l'API ne donne que les départs à chaque arrêt, sans identifiant de course pour suivre un véhicule.
 - Le jour de service du métro court jusqu'à ~1h du matin : avant 4h, on lit les horaires de la veille.
 - Les perturbations ciblent une ligne (`ILEVIA:LineRef::ME1:LOC` pour M1). Les emojis et liens sont retirés, car illisibles en e-ink.
+- Ilévia classe toutes les perturbations en « Information » et les garde 24 h après publication. Le plugin écarte celles dont la fin prévue ou l'heure annoncée (« ralentie jusque 09h00 ») est passée, et repère lui-même les incidents en cours (ralenti, interrompu, dévié, temps d'attente…) pour les afficher en premier.
 
 Données : © Ilévia / Métropole Européenne de Lille, open data ([data.gouv.fr](https://www.data.gouv.fr/datasets/ilevia-prochains-passages-bus-et-tramway)).

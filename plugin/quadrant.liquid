@@ -1,5 +1,5 @@
 <div class="layout layout--col layout--top layout--stretch">
-  <div class="ilv">
+  <div class="ilv{% if ilevia.alert_count > 0 %} ilv--alert{% endif %}">
     {% if has_metro %}
       {% assign d = m.directions.first %}
       <div class="ilv-head">
@@ -14,7 +14,7 @@
           <div class="ilv-meta"><b>Service terminé</b>{% if d.next_first %}<br>Reprise à {{ d.next_first }}{% endif %}</div>
         {% else %}
           <div class="ilv-times">
-            {% for dep in d.departures limit: 3 %}
+            {% for dep in d.departures limit: 2 %}
             <div>
               <div class="ilv-time ilv-time--md">{{ dep.time }}</div>
               {% if dep.arrival %}<div class="ilv-arr">arr. {{ dep.arrival }}</div>{% endif %}
@@ -42,9 +42,8 @@
 
     {% if ilevia.alert_count > 0 %}
       {% assign a = ilevia.alerts.first %}
-      <div class="ilv-alert {% if a.severe %}ilv-alert--severe{% endif %}">
-        <span class="ilv-badge ilv-badge--sm">{{ a.line }}</span>
-        <div class="ilv-alert-text ilv-alert-text--1">{{ a.text }}</div>
+      <div class="ilv-card{% if a.severe %} ilv-card--severe{% endif %} ilv-card--inline">
+        <div class="ilv-card-body ilv-clamp-3"><span class="ilv-badge ilv-badge--sm">{{ a.line }}</span> {{ a.short }}</div>
       </div>
     {% else %}
       <div class="ilv-ok"><span class="ilv-badge ilv-badge--sm">OK</span> Trafic normal</div>

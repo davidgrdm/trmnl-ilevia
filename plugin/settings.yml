@@ -15,8 +15,8 @@ custom_fields:
   field_type: author_bio
   category: travel
   description: >-
-    <b>Ilévia Lille — métro, tram, bus.</b> Affiche les 3 prochains passages du réseau Ilévia
-    (Métropole Européenne de Lille) sur votre écran : une station de métro avec ses prochains
+    <b>Ilévia Lille — métro, tram, bus.</b> Affiche les prochains passages du réseau Ilévia
+    (Métropole Européenne de Lille) sur votre écran : une station de métro avec ses 2 prochains
     départs en grand, l'heure d'arrivée à la station de votre choix ;
     un arrêt de bus ou de tram avec les lignes et directions que vous suivez ; et les
     perturbations en cours sur ces lignes. Bus et tram sont en temps réel. Le métro affiche les

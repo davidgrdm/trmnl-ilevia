@@ -27,10 +27,11 @@
   .ilv-sub { font-size: calc(19px * var(--k)); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   /* Heures de passage : 3 colonnes, en grand */
-  .ilv-times { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(4px * var(--k)) calc(12px * var(--k)); }
-  .ilv-time { font-size: calc(46px * var(--k)); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -1px; white-space: nowrap; }
-  .ilv-time--xl { font-size: calc(64px * var(--k)); }
-  .ilv-time--md { font-size: calc(36px * var(--k)); }
+  /* Heures de passage du métro : les 2 prochains, très gros */
+  .ilv-times { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: calc(4px * var(--k)) calc(16px * var(--k)); }
+  .ilv-time { font-size: calc(58px * var(--k)); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -1px; white-space: nowrap; }
+  .ilv-time--xl { font-size: calc(84px * var(--k)); }
+  .ilv-time--md { font-size: calc(46px * var(--k)); }
   .ilv-time--sm { font-size: calc(30px * var(--k)); }
   .ilv-arr { font-size: calc(18px * var(--k)); line-height: 1.25; white-space: nowrap; }
   .ilv-meta { font-size: calc(19px * var(--k)); line-height: 1.3; }
@@ -54,6 +55,29 @@
   .ilv-alert--severe .ilv-badge { background: #fff; color: #000; }
   .ilv-alert-text { font-size: calc(17px * var(--k)); line-height: 1.25; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .ilv-alert-text--1 { -webkit-line-clamp: 1; }
+  /* Carte de perturbation : bandeau noir (ligne + nature), puis titre en gras et message */
+  .ilv-card { flex: none; border: 3px solid #000; border-radius: calc(10px * var(--k)); overflow: hidden; }
+  .ilv-card-head { display: flex; align-items: center; gap: calc(8px * var(--k)); background: #000; color: #fff; padding: calc(4px * var(--k)) calc(10px * var(--k)); font-size: calc(18px * var(--k)); font-weight: 700; line-height: 1.1; }
+  .ilv-card-head .ilv-badge { background: #fff; color: #000; }
+  .ilv-card-more { margin-left: auto; font-weight: 400; white-space: nowrap; }
+  .ilv-card-body { padding: calc(5px * var(--k)) calc(10px * var(--k)); font-size: calc(19px * var(--k)); line-height: 1.25; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+  .ilv-card--severe .ilv-card-body { background: #000; color: #fff; border-top: 1px solid #fff; }
+  .ilv-clamp-2 { -webkit-line-clamp: 2; } .ilv-clamp-3 { -webkit-line-clamp: 3; } .ilv-clamp-5 { -webkit-line-clamp: 5; }
+  .ilv-card--compact .ilv-card-body { padding: calc(3px * var(--k)) calc(8px * var(--k)); font-size: calc(17px * var(--k)); }
+  .ilv-card--compact .ilv-card-head { padding: calc(2px * var(--k)) calc(8px * var(--k)); font-size: calc(16px * var(--k)); }
+  /* Petits formats avec une carte affichée : heures un peu réduites pour lui laisser la place */
+  .view--half_horizontal .ilv--alert .ilv-time, .view--quadrant .ilv--alert .ilv-time { font-size: calc(38px * var(--k)); }
+  .view--half_horizontal .ilv--alert .ilv-arr { font-size: calc(14px * var(--k)); }
+  .view--quadrant .ilv--alert .ilv-arr { display: none; } /* la place va au message */
+  /* Carte sans bandeau (quart d'écran) : la pastille de ligne ouvre le texte */
+  .ilv-card--inline .ilv-card-body { padding: calc(2px * var(--k)) calc(8px * var(--k)); font-size: calc(16px * var(--k)); line-height: 1.2; }
+  .ilv-card--inline .ilv-badge { vertical-align: 1px; margin-right: calc(4px * var(--k)); }
+  .ilv-card--inline.ilv-card--severe .ilv-card-body { border-top: none; }
+  .ilv-card--severe .ilv-card-body .ilv-badge { background: #fff; color: #000; }
+  /* Portrait : colonnes étroites mais hautes, on laisse le texte s'étaler */
+  .screen--portrait .view--half_vertical .ilv-card-body { -webkit-line-clamp: 8; }
+  .screen--portrait .view--half_horizontal .ilv-card-body { -webkit-line-clamp: 4; }
+  .screen--portrait .view--quadrant .ilv-card-body { -webkit-line-clamp: 6; }
   .ilv-ok { font-size: calc(17px * var(--k)); display: flex; gap: calc(8px * var(--k)); align-items: center; }
   .ilv-empty { font-size: calc(18px * var(--k)); line-height: 1.3; }
   .ilv-strong { font-weight: 700; }
@@ -80,7 +104,7 @@
   .screen--portrait .ilv-groups--2col { grid-template-columns: 1fr; }
   .screen--portrait .view--full .ilv-row > .ilv-col + .ilv-col, .screen--portrait .view--half_horizontal .ilv-row > .ilv-col + .ilv-col { border-left: none; padding-left: 0; border-top: 2px solid #000; padding-top: calc(6px * var(--k)); }
   /* Colonnes étroites en portrait (240 px) : heures plus petites */
-  .screen--portrait .view--half_vertical .ilv-time, .screen--portrait .view--quadrant .ilv-time { font-size: calc(22px * var(--k)); letter-spacing: -0.5px; }
+  .screen--portrait .view--half_vertical .ilv-time, .screen--portrait .view--quadrant .ilv-time { font-size: calc(30px * var(--k)); letter-spacing: -0.5px; }
   .screen--portrait .view--half_vertical .ilv-times, .screen--portrait .view--quadrant .ilv-times { column-gap: calc(6px * var(--k)); }
   .screen--portrait .view--half_vertical .ilv-deps, .screen--portrait .view--quadrant .ilv-deps { font-size: calc(19px * var(--k)); gap: calc(8px * var(--k)); }
   .screen--portrait .view--half_vertical .ilv-arr, .screen--portrait .view--quadrant .ilv-arr { font-size: calc(13px * var(--k)); }

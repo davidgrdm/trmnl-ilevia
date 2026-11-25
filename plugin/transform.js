@@ -43,7 +43,7 @@ async function run(input) {
   const watched = new Set(cfg.lines);
   (metro ? metro.lines : []).forEach((l) => watched.add(METRO_LINE_CODES[l] || l));
   (surface ? surface.groups : []).forEach((g) => watched.add(g.line));
-  const alerts = disruptionsRaw ? buildAlerts(disruptionsRaw, watched) : [];
+  const alerts = disruptionsRaw ? buildAlerts(disruptionsRaw, watched, now) : [];
 
   return {
     ilevia: {
@@ -201,21 +201,89 @@ function buildSurface(data, cfg, now) {
 }
 
 // ---------- Perturbations ----------
+// Ilévia publie tout en type "Information" : on déduit nous-mêmes ce qui est un incident en cours.
+const INCIDENT_RE = /(ralenti|interromp|ne circule (pas|plus)|n['’]est (pas|plus) desservi|ne sont (pas|plus) desservis|incident|panne|d[ée]faut|temps d['’]attente|perturb|suspendu|d[ée]vi[ée])/i;
+const PLANNED_RE = /(\b(les?|ce) (lundis?|mardis?|mercredis?|jeudis?|vendredis?|samedis?|dimanches?)\b|\bdu \d{1,2}( \w+)? au \d{1,2}\b|\bà (partir|compter) du\b|\btravaux de\b|\blors (des?|du)\b)/i;
 
-function buildAlerts(data, watched) {
+function buildAlerts(data, watched, now) {
   const seen = new Set();
   const out = [];
   for (const f of data.features || []) {
     const p = f.properties || {};
     const m = /LineRef::([^:]+):/.exec(p.cible || "");
     if (!m || !watched.has(m[1])) continue;
-    const text = cleanMessage(p.message);
-    if (!text || seen.has(text)) continue;
-    seen.add(text);
+    // L'API garde des messages 24 h après publication : on écarte ceux dont la fin prévue est passée
+    // (comme pour les passages, l'heure est locale malgré le suffixe "Z").
+    const end = String(p.heure_fin_prevue || "").slice(0, 16);
+    if (end && end < now.isoLocal) continue;
+    const { title, body } = splitMessage(cleanMessage(p.message));
+    if (!title && !body) continue;
+    // « ralentie jusque 09h00 environ » publié ce matin : périmé ce soir
+    if (announcedEndPassed(title + " " + body, p.date_modification, now)) continue;
+    const key = `${m[1]}|${title}|${body}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const all = `${title} ${body}`;
+    const severe = INCIDENT_RE.test(all) && !PLANNED_RE.test(all);
     const line = Object.keys(METRO_LINE_CODES).find((k) => METRO_LINE_CODES[k] === m[1]) || m[1];
-    out.push({ line, severe: p.type_perturbation && p.type_perturbation !== "Information", type: p.type_perturbation || "Information", text });
+    out.push({
+      line,
+      severe,
+      label: severe ? "Perturbation en cours" : "Info trafic",
+      title,
+      text: body,
+      short: shortMessage(title, body),
+      posted: String(p.date_modification || "").slice(0, 16),
+    });
   }
-  return out.sort((a, b) => Number(b.severe) - Number(a.severe)).slice(0, 4);
+  // Incidents en cours d'abord, puis les plus récents
+  out.sort((a, b) => Number(b.severe) - Number(a.severe) || (a.posted < b.posted ? 1 : a.posted > b.posted ? -1 : 0));
+  return out.slice(0, 3).map(({ posted, ...a }) => a);
+}
+
+function announcedEndPassed(text, postedIso, now) {
+  const m = /jusqu(?:e|['’]\s?[àa])\s+(\d{1,2})\s?h\s?(\d{2})?/i.exec(text);
+  const posted = String(postedIso || "");
+  if (!m || posted.length < 16) return false;
+  const [y, mo, d] = posted.slice(0, 10).split("-").map(Number);
+  const postedMin = Number(posted.slice(11, 13)) * 60 + Number(posted.slice(14, 16));
+  const endMin = Number(m[1]) * 60 + Number(m[2] || 0);
+  const end = new Date(Date.UTC(y, mo - 1, d, 0, endMin));
+  if (endMin <= postedMin) end.setUTCDate(end.getUTCDate() + 1); // « jusque 06h00 » annoncé la veille au soir
+  return end.toISOString().slice(0, 16) < now.isoLocal;
+}
+
+function splitMessage(text) {
+  // "INTERRUPTIONS DE LA LIGNE 1 DU METRO la ligne 1 ne circulera pas…" -> titre + message
+  const words = text.split(" ");
+  let i = 0;
+  while (i < words.length && /[A-ZÀ-Ý0-9]/.test(words[i]) && !/[a-zà-ÿ]/.test(words[i])) i++;
+  let title = "";
+  let body = text;
+  if (i >= 2 && words.slice(0, i).join("").replace(/[^A-ZÀ-Ý]/g, "").length >= 8) {
+    title = sentenceCase(words.slice(0, i).join(" "));
+    body = words.slice(i).join(" ");
+  }
+  body = body.replace(/^[\s·:,-]+/, "");
+  body = body.charAt(0).toUpperCase() + body.slice(1);
+  return { title, body };
+}
+
+// Version courte pour les petits formats : la phrase essentielle, sans formules d'introduction.
+function shortMessage(title, body) {
+  let first = body.split(/ · |(?<=\.) /)[0].replace(/[\s:]+$/, "");
+  first = first
+    .replace(/^Actuellement\s*,\s*/i, "")
+    .replace(/^En raison d['’e][^,]{0,80},\s*/i, "")
+    .replace(/^Suite à [^,]{0,80},\s*/i, "");
+  first = first.charAt(0).toUpperCase() + first.slice(1);
+  if (title && first.length > 90) return title;
+  return first || title;
+}
+
+function sentenceCase(s) {
+  const t = s.toLowerCase().replace(/\bmetro\b/g, "métro");
+  return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
 function cleanMessage(html) {
@@ -227,8 +295,14 @@ function cleanMessage(html) {
     .replace(/&#39;|&rsquo;/g, "’")
     .replace(/&quot;/g, '"')
     .replace(/[​-‍️]/g, "")
+    .replace(/\s*[►▶•]\s*/g, " · ") // puces -> séparateur lisible
     .replace(/[℀-⅏←-⯿\u{1F000}-\u{1FAFF}]/gu, " ") // pictogrammes / emojis (illisibles en e-ink)
     .replace(/,?\s*(sur la page[^.]*)?en cliquant\s*(\[?\s*ici\s*\]?)?\s*\.?\s*$/i, ".")
+    // formules sans information utile sur un petit écran
+    .replace(/\s*Retrouvez l['’]ensemble des informations[^.]*\.?/gi, "")
+    .replace(/\s*Merci de votre compréhension\.?/gi, "")
+    .replace(/\s+([,.])/g, "$1")
+    .replace(/(\s*·\s*)+$/g, "")
     .replace(/\s+/g, " ")
     .trim();
 }
